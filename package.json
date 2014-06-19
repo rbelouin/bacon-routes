@@ -1,0 +1,23 @@
+{
+  "name": "bacon-routes",
+  "version": "0.0.0",
+  "description": "Route management, the bacon.js way.",
+  "main": "bacon-routes.js",
+  "keywords": [
+    "bacon.js",
+    "bacon",
+    "frp",
+    "functionnal",
+    "reactive",
+    "programming",
+    "stream",
+    "streams",
+    "route",
+    "routes",
+    "routing",
+    "path",
+    "paths"
+  ],
+  "author": "rbelouin <rodolphe.belouin@gmail.com>",
+  "license": "MIT"
+}
