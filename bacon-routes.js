@@ -106,22 +106,28 @@
       }
     }
 
+    /* Dedicate "errors" stream to 404 occurences */
+    var s_errors = new Bacon.Bus();
+    streams.errors = s_errors.map(function(value) { return value; });
+
     Bacon.history.onValue(function(history) {
       var pathSegments = flatten(history.location.pathname.split("/"));
+      var result = cloneObject(history);
 
       for(var name in buses) {
         if(buses.hasOwnProperty(name)) {
           var params = filters[name](pathSegments);
 
           if(params) {
-            var result = cloneObject(history);
             result.params = params;
 
             buses[name].push(result);
-            break;
+            return;
           }
         }
       }
+
+      s_errors.push(result);
     });
 
     return streams;

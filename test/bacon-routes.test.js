@@ -114,4 +114,42 @@ describe("Bacon.fromRoutes", function() {
 
     History.pushState(null, null, "/musicians/dave-brubeck/songs/blue-rondo-%C3%A0-la-turk");
   });
+
+  it("should send the new history to the 'errors' stream if no route is matching", function(done) {
+    var routes = Bacon.fromRoutes({
+      routes: {
+        a: "/a"
+      }
+    });
+
+    routes.errors.take(1).onValue(function(history) {
+      assert.equal(history.location.pathname, "/b");
+      done();
+    });
+
+    History.pushState(null, null, "/b");
+  });
+
+  it("should not send the new history to the 'errors' stream if a route is matching", function(done) {
+    var routes = Bacon.fromRoutes({
+      routes: {
+        a: "/a",
+        b: "/b",
+        c: "/c"
+      }
+    });
+
+    var s_called = Bacon.combineTemplate({
+      c: routes.c.map(true).toProperty(false),
+      errors: routes.errors.map(true).toProperty(false)
+    });
+
+    s_called.skip(1).take(1).onValue(function(called) {
+      assert.isTrue(called.c);
+      assert.isFalse(called.errors);
+      done();
+    });
+
+    History.pushState(null, null, "/c");
+  });
 });
