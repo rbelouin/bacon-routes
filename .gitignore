@@ -2,3 +2,7 @@
 bower_components/
 node_modules/
 test/dependencies.js
+test/bacon-routes.js
+test/mocha.css
+test/mocha.js
+test/proclaim.js

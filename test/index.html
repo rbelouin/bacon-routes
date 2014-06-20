@@ -4,21 +4,21 @@
 	<meta charset="utf-8">
 	<title>Tests for bacon-routes.js</title>
 
-  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" type="text/css" />
+  <link rel="stylesheet" href="mocha.css" type="text/css" />
 </head>
 <body>
   <!-- Required for browser reporter -->
   <div id="mocha"></div>
 
   <!-- Mocha setup -->
-  <script src="../node_modules/mocha/mocha.js" type="text/javascript"></script>
+  <script src="mocha.js" type="text/javascript"></script>
   <script type="text/javascript">
     // Use BDD interface
     mocha.setup("bdd");
   </script>
 
   <!-- Include your assertion lib of choice -->
-  <script src="../node_modules/proclaim/lib/proclaim.js" type="text/javascript"></script>
+  <script src="proclaim.js" type="text/javascript"></script>
   <script type="text/javascript">
     // Use proclaim as assertion library
     var assert = proclaim;
@@ -26,7 +26,7 @@
 
   <!-- Files to test -->
   <script type="text/javascript" src="dependencies.js"></script>
-  <script type="text/javascript" src="../bacon-routes.js"></script>
+  <script type="text/javascript" src="bacon-routes.js"></script>
 
   <!-- Spec files -->
   <script type="text/javascript" src="bacon-routes.test.js"></script>

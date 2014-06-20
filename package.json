@@ -27,5 +27,9 @@
     "grunt-cli": "^0.1.13",
     "mocha": "^1.20.1",
     "proclaim": "^2.0.0"
+  },
+  "dependencies": {
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-copy": "^0.5.0"
   }
 }
