@@ -89,6 +89,10 @@
   Bacon.fromRoutes = function(settings) {
     settings.routes = settings.routes || {};
 
+    var ready = (settings.ready || Bacon.constant(true)).toEventStream().skipWhile(function(value) {
+      return value !== true;
+    }).take(1);
+
     var routes = {};
     var buses = {};
     var streams = {};
@@ -110,24 +114,26 @@
     var s_errors = new Bacon.Bus();
     streams.errors = s_errors.map(function(value) { return value; });
 
-    Bacon.history.onValue(function(history) {
-      var pathSegments = flatten(history.location.pathname.split("/"));
-      var result = cloneObject(history);
+    ready.onValue(function(value) {
+      Bacon.history.onValue(function(history) {
+        var pathSegments = flatten(history.location.pathname.split("/"));
+        var result = cloneObject(history);
 
-      for(var name in buses) {
-        if(buses.hasOwnProperty(name)) {
-          var params = filters[name](pathSegments);
+        for(var name in buses) {
+          if(buses.hasOwnProperty(name)) {
+            var params = filters[name](pathSegments);
 
-          if(params) {
-            result.params = params;
+            if(params) {
+              result.params = params;
 
-            buses[name].push(result);
-            return;
+              buses[name].push(result);
+              return;
+            }
           }
         }
-      }
 
-      s_errors.push(result);
+        s_errors.push(result);
+      });
     });
 
     return streams;

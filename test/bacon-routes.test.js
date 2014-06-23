@@ -152,4 +152,61 @@ describe("Bacon.fromRoutes", function() {
 
     History.pushState(null, null, "/c");
   });
+
+  it("should not send the new history to the matching stream at start, by default", function(done) {
+    var add = function(a, b) { return a + b; };
+
+    History.pushState(null, null, "/start");
+
+    var routes = Bacon.fromRoutes({
+      routes: {
+        start: "/start",
+        stop: "/stop"
+      }
+    });
+
+    var s_counts = Bacon.combineTemplate({
+      start: routes.start.map(1).scan(0, add),
+      stop: routes.stop.map(1).scan(0, add)
+    });
+
+    s_counts.skip(1).take(1).onValue(function(counts) {
+      assert.equal(counts.start, 0, "/start has been called " + counts.start + " time(s).");
+      assert.equal(counts.stop, 1, "/stop has been called " + counts.stop + " time(s).");
+      done();
+    });
+
+    History.pushState(null, null, "/stop");
+  });
+
+  it("should send the new history to the matching stream at start, if a 'ready' property is given", function(done) {
+    var add = function(a, b) { return a + b; };
+
+    History.pushState(null, null, "/start");
+
+    var ready = new Bacon.Bus();
+
+    var routes = Bacon.fromRoutes({
+      ready: ready.map(true).toProperty(false),
+      routes: {
+        start: "/start",
+        stop: "/stop"
+      }
+    });
+
+    var s_counts = Bacon.combineTemplate({
+      start: routes.start.map(1).scan(0, add),
+      stop: routes.stop.map(1).scan(0, add)
+    });
+
+    s_counts.skip(2).take(1).onValue(function(counts) {
+      assert.equal(counts.start, 1, "/start has been called " + counts.start + " time(s).");
+      assert.equal(counts.stop, 1, "/stop has been called " + counts.stop + " time(s).");
+      done();
+    });
+
+    ready.push();
+
+    History.pushState(null, null, "/stop");
+  });
 });
