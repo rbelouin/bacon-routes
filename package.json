@@ -1,6 +1,6 @@
 {
   "name": "bacon-routes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Route management, the bacon.js way.",
   "main": "bacon-routes.js",
   "keywords": [
