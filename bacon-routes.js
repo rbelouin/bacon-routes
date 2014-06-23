@@ -1,15 +1,16 @@
 (function() {
-  var cloneLocation = function(location) {
-    var result = {};
 
-    for(var key in location) {
-      result[key] = location[key];
-    }
+  /*
+   * Utils
+   * Let's start by defining some useful functions
+   */
+  var Utils = {};
 
-    return result;
-  };
-
-  var cloneObject = function(object) {
+  /*
+   * Utils.cloneObject
+   * Create an immutable copy of a given object
+   */
+  Utils.cloneObject = function(object) {
     var result = {};
 
     for(var key in object) {
@@ -21,7 +22,27 @@
     return result;
   };
 
-  var flatten = function(array) {
+  /*
+   * Utils.cloneLocation
+   * Create an immutable copy of window.location
+   */
+  Utils.cloneLocation = function() {
+    var result = {};
+    var loc = window.location;
+
+    /* None of window.location keys is owned by window.location, so no check here */
+    for(var key in loc) {
+      result[key] = loc[key];
+    }
+
+    return result;
+  };
+
+  /*
+   * Utils.compact
+   * Remove "falsey" values from a given array
+   */
+  Utils.compact = function(array) {
     if(typeof array.filter == "function") {
       return array.filter(function(item) {
         return item;
@@ -40,7 +61,12 @@
     }
   };
 
-  var compareSegments = function(routeSegments) {
+  /*
+   * Utils.extractParams
+   * Return path parameters if the given splitted path does match the given splitted route. Return null otherwise.
+   * ex: Utils.extractParams(["users", ":userId"])(["users", "john-smith"]) => {"userId": "john-smith"}
+   */
+  Utils.extractParams = function(routeSegments) {
     return function(pathSegments) {
       if(routeSegments.length != pathSegments.length) {
         return null;
@@ -62,6 +88,10 @@
     };
   };
 
+  /*
+   * s_history
+   * Stream emitting history states
+   */
   var s_history = Bacon.fromBinder(function(sink) {
     var subscribed = true;
 
@@ -69,7 +99,7 @@
       if(subscribed) {
         sink({
           state: History.getState(),
-          location: cloneLocation(window.location)
+          location: Utils.cloneLocation()
         });
       }
     });
@@ -79,13 +109,22 @@
     };
   });
 
+  /* Push the initial state */
   History.pushState(null, null, window.location.href);
 
+  /*
+   * Bacon.history
+   * Create a bacon property of the history state
+   */
   Bacon.history = s_history.toProperty({
     state: History.getState(),
-    location: cloneLocation(window.location)
+    location: Utils.cloneLocation()
   });
 
+  /*
+   * Bacon.fromRoutes
+   * Return one bacon stream per defined route
+   */
   Bacon.fromRoutes = function(settings) {
     settings.routes = settings.routes || {};
 
@@ -100,10 +139,10 @@
 
     for(var name in settings.routes) {
       if(settings.routes.hasOwnProperty(name) && typeof settings.routes[name] == "string") {
-        routes[name] = flatten(settings.routes[name].split("/"));
+        routes[name] = Utils.compact(settings.routes[name].split("/"));
 
         buses[name] = new Bacon.Bus();
-        filters[name] = compareSegments(routes[name]);
+        filters[name] = Utils.extractParams(routes[name]);
 
         /* Prevent final user to push any data in the returned streams */
         streams[name] = buses[name].map(function(value) { return value; });
@@ -116,8 +155,8 @@
 
     ready.onValue(function(value) {
       Bacon.history.onValue(function(history) {
-        var pathSegments = flatten(history.location.pathname.split("/"));
-        var result = cloneObject(history);
+        var pathSegments = Utils.compact(history.location.pathname.split("/"));
+        var result = Utils.cloneObject(history);
 
         for(var name in buses) {
           if(buses.hasOwnProperty(name)) {
@@ -138,4 +177,5 @@
 
     return streams;
   };
+
 })();
