@@ -2,20 +2,20 @@ var Bacon = window.Bacon = require("baconjs");
 require("../bacon-routes.js");
 
 describe("Bacon.history", function() {
-  after(function() {
+  afterEach(function() {
     Bacon.history.pushState(null, null, window.location.origin);
   });
 
   it("should contain the correct href at start", function(done) {
     Bacon.history.take(1).onValue(function(history) {
-      assert.equal(history.location.href, window.location.href, "Actual location does not equal the expected location");
+      expect(history.location.href).toBe(window.location.href);
       done();
     });
   });
 
   it("should contain the correct href after a pushState", function(done) {
     Bacon.history.skip(1).take(1).onValue(function(history) {
-      assert.equal(history.location.href, window.location.href, "Actual location does not equal the expected location");
+      expect(history.location.href).toBe(window.location.href);
       done();
     });
 
@@ -32,7 +32,7 @@ describe("Bacon.history", function() {
     });
 
     Bacon.history.skip(2).take(1).onValue(function(history) {
-      assert.equal(initialLocation.href, initialHref, "Initial location did not keep the initial href value");
+      expect(initialLocation.href).toBe(initialHref);
       done();
     });
 
@@ -42,7 +42,7 @@ describe("Bacon.history", function() {
 });
 
 describe("Bacon.fromRoutes", function() {
-  after(function() {
+  afterEach(function() {
     Bacon.history.pushState(null, null, window.location.origin);
   });
 
@@ -56,10 +56,10 @@ describe("Bacon.fromRoutes", function() {
       }
     });
 
-    assert.isObject(routes.home);
-    assert.isObject(routes.users);
-    assert.isUndefined(routes.invalid);
-    assert.isUndefined(routes.invalid2);
+    expect(routes.home).toBeDefined();
+    expect(routes.users).toBeDefined();
+    expect(routes.invalid).toBeUndefined();
+    expect(routes.invalid2).toBeUndefined();
   });
 
   it("should send the new history only to the first matching route", function(done) {
@@ -78,8 +78,8 @@ describe("Bacon.fromRoutes", function() {
     });
 
     s_called.skip(2).take(1).onValue(function(called) {
-      assert.isTrue(called.routeA);
-      assert.isFalse(called.routeB);
+      expect(called.routeA).toBe(true);
+      expect(called.routeB).toBe(false);
       done();
     });
 
@@ -95,7 +95,7 @@ describe("Bacon.fromRoutes", function() {
     });
 
     routes.musician.take(1).onValue(function(history) {
-      assert.equal(history.params.id, "dave-brubeck");
+      expect(history.params.id).toBe("dave-brubeck");
       done();
     });
 
@@ -110,8 +110,8 @@ describe("Bacon.fromRoutes", function() {
     });
 
     routes.song.take(1).onValue(function(history) {
-      assert.equal(history.params.id, "dave-brubeck");
-      assert.equal(history.params.songId, "blue-rondo-à-la-turk");
+      expect(history.params.id).toBe("dave-brubeck");
+      expect(history.params.songId).toBe("blue-rondo-à-la-turk");
       done();
     });
 
@@ -126,7 +126,7 @@ describe("Bacon.fromRoutes", function() {
     });
 
     routes.errors.take(1).onValue(function(history) {
-      assert.equal(history.location.pathname, "/b");
+      expect(history.location.pathname).toBe("/b");
       done();
     });
 
@@ -148,8 +148,8 @@ describe("Bacon.fromRoutes", function() {
     });
 
     s_called.skip(1).take(1).onValue(function(called) {
-      assert.isTrue(called.c);
-      assert.isFalse(called.errors);
+      expect(called.c).toBe(true);
+      expect(called.errors).toBe(false);
       done();
     });
 
@@ -174,8 +174,8 @@ describe("Bacon.fromRoutes", function() {
     });
 
     s_counts.skip(1).take(1).onValue(function(counts) {
-      assert.equal(counts.start, 0, "/start has been called " + counts.start + " time(s).");
-      assert.equal(counts.stop, 1, "/stop has been called " + counts.stop + " time(s).");
+      expect(counts.start).toBe(0);
+      expect(counts.stop).toBe(1);
       done();
     });
 
@@ -203,8 +203,8 @@ describe("Bacon.fromRoutes", function() {
     });
 
     s_counts.skip(2).take(1).onValue(function(counts) {
-      assert.equal(counts.start, 1, "/start has been called " + counts.start + " time(s).");
-      assert.equal(counts.stop, 1, "/stop has been called " + counts.stop + " time(s).");
+      expect(counts.start).toBe(1);
+      expect(counts.stop).toBe(1);
       done();
     });
 

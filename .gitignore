@@ -1,6 +1,3 @@
 *.swp
 node_modules/
 test/bundle.js
-test/mocha.css
-test/mocha.js
-test/proclaim.js

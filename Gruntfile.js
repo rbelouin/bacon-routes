@@ -11,30 +11,25 @@ module.exports = function(grunt) {
     connect: {
       test: {
         options: {
-          base: "test/",
-          hostname: "127.0.0.1",
-          keepalive: true
+          hostname: "127.0.0.1"
         }
       }
     },
-    copy: {
+    jasmine: {
       test: {
-        expand: true,
-        flatten: true,
-        src: [
-          "node_modules/mocha/mocha.css",
-          "node_modules/mocha/mocha.js",
-          "node_modules/proclaim/lib/proclaim.js"
-        ],
-        dest: "test/"
+        src: "test/bundle.js",
+        options: {
+          host: "http://127.0.0.1:8000",
+          outfile: "index.html"
+        }
       }
     }
   });
 
   grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-connect");
-  grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-contrib-jasmine");
 
   grunt.registerTask("default", ["test"]);
-  grunt.registerTask("test", ["browserify", "copy", "connect"]);
+  grunt.registerTask("test", ["browserify", "connect", "jasmine"]);
 };
