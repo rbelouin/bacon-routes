@@ -1,11 +1,10 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
-    bower_concat: {
-      all: {
-        dest: "test/dependencies.js",
-        mainFiles: {
-          "history.js": "scripts/bundled/html5/native.history.js"
+    browserify: {
+      test: {
+        files: {
+          "test/bundle.js": "test/bacon-routes.test.js"
         }
       }
     },
@@ -23,7 +22,6 @@ module.exports = function(grunt) {
         expand: true,
         flatten: true,
         src: [
-          "bacon-routes.js",
           "node_modules/mocha/mocha.css",
           "node_modules/mocha/mocha.js",
           "node_modules/proclaim/lib/proclaim.js"
@@ -33,10 +31,10 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks("grunt-bower-concat");
+  grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-connect");
   grunt.loadNpmTasks("grunt-contrib-copy");
 
-  grunt.registerTask("default", ["bower_concat"]);
-  grunt.registerTask("test", ["bower_concat", "copy", "connect"]);
+  grunt.registerTask("default", ["test"]);
+  grunt.registerTask("test", ["browserify", "copy", "connect"]);
 };

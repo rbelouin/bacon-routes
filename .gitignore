@@ -1,8 +1,6 @@
 *.swp
-bower_components/
 node_modules/
-test/dependencies.js
-test/bacon-routes.js
+test/bundle.js
 test/mocha.css
 test/mocha.js
 test/proclaim.js
