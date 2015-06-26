@@ -92,34 +92,30 @@
    * s_history
    * Stream emitting history states
    */
-  var s_history = Bacon.fromBinder(function(sink) {
-    var subscribed = true;
-
-    History.Adapter.bind(window, "statechange", function() {
-      if(subscribed) {
-        sink({
-          state: History.getState(),
-          location: Utils.cloneLocation()
-        });
-      }
-    });
-
-    return function() {
-      subscribed = false;
+  var s_historyBus = new Bacon.Bus();
+  var s_history = Bacon.fromEventTarget(window, "popstate").merge(s_historyBus).map(function() {
+    return {
+      state: history.state,
+      location: Utils.cloneLocation()
     };
   });
-
-  /* Push the initial state */
-  History.pushState(null, null, window.location.href);
 
   /*
    * Bacon.history
    * Create a bacon property of the history state
    */
   Bacon.history = s_history.toProperty({
-    state: History.getState(),
+    state: history.state,
     location: Utils.cloneLocation()
   });
+
+  Bacon.history.pushState = function(stateObj, title, url) {
+    history.pushState(stateObj, title, url);
+    s_historyBus.push();
+  };
+
+  /* Push the initial state */
+  Bacon.history.pushState(null, null, window.location.href);
 
   /*
    * Bacon.fromRoutes

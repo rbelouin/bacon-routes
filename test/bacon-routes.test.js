@@ -1,6 +1,6 @@
 describe("Bacon.history", function() {
   after(function() {
-    History.pushState(null, null, window.location.origin);
+    Bacon.history.pushState(null, null, window.location.origin);
   });
 
   it("should contain the correct href at start", function(done) {
@@ -16,7 +16,7 @@ describe("Bacon.history", function() {
       done();
     });
 
-    History.pushState(null, null, "?key=value");
+    Bacon.history.pushState(null, null, "?key=value");
   });
 
   it("should keep locations immutable through pushState", function(done) {
@@ -33,14 +33,14 @@ describe("Bacon.history", function() {
       done();
     });
 
-    History.pushState(null, null, "?key2=value2");
-    History.pushState(null, null, "?key3=value3");
+    Bacon.history.pushState(null, null, "?key2=value2");
+    Bacon.history.pushState(null, null, "?key3=value3");
   });
 });
 
 describe("Bacon.fromRoutes", function() {
   after(function() {
-    History.pushState(null, null, window.location.origin);
+    Bacon.history.pushState(null, null, window.location.origin);
   });
 
   it("should define one stream per valid route", function() {
@@ -80,8 +80,8 @@ describe("Bacon.fromRoutes", function() {
       done();
     });
 
-    History.pushState(null, null, "/something");
-    History.pushState(null, null, "/something/");
+    Bacon.history.pushState(null, null, "/something");
+    Bacon.history.pushState(null, null, "/something/");
   });
 
   it("should be able to extract a parameter from the given path", function(done) {
@@ -96,7 +96,7 @@ describe("Bacon.fromRoutes", function() {
       done();
     });
 
-    History.pushState(null, null, "/musicians/dave-brubeck");
+    Bacon.history.pushState(null, null, "/musicians/dave-brubeck");
   });
 
   it("should be able to URI-decode a parameter from the given path", function(done) {
@@ -112,7 +112,7 @@ describe("Bacon.fromRoutes", function() {
       done();
     });
 
-    History.pushState(null, null, "/musicians/dave-brubeck/songs/blue-rondo-%C3%A0-la-turk");
+    Bacon.history.pushState(null, null, "/musicians/dave-brubeck/songs/blue-rondo-%C3%A0-la-turk");
   });
 
   it("should send the new history to the 'errors' stream if no route is matching", function(done) {
@@ -127,7 +127,7 @@ describe("Bacon.fromRoutes", function() {
       done();
     });
 
-    History.pushState(null, null, "/b");
+    Bacon.history.pushState(null, null, "/b");
   });
 
   it("should not send the new history to the 'errors' stream if a route is matching", function(done) {
@@ -150,13 +150,13 @@ describe("Bacon.fromRoutes", function() {
       done();
     });
 
-    History.pushState(null, null, "/c");
+    Bacon.history.pushState(null, null, "/c");
   });
 
   it("should not send the new history to the matching stream at start, by default", function(done) {
     var add = function(a, b) { return a + b; };
 
-    History.pushState(null, null, "/start");
+    Bacon.history.pushState(null, null, "/start");
 
     var routes = Bacon.fromRoutes({
       routes: {
@@ -176,13 +176,13 @@ describe("Bacon.fromRoutes", function() {
       done();
     });
 
-    History.pushState(null, null, "/stop");
+    Bacon.history.pushState(null, null, "/stop");
   });
 
   it("should send the new history to the matching stream at start, if a 'ready' property is given", function(done) {
     var add = function(a, b) { return a + b; };
 
-    History.pushState(null, null, "/start");
+    Bacon.history.pushState(null, null, "/start");
 
     var ready = new Bacon.Bus();
 
@@ -207,6 +207,6 @@ describe("Bacon.fromRoutes", function() {
 
     ready.push();
 
-    History.pushState(null, null, "/stop");
+    Bacon.history.pushState(null, null, "/stop");
   });
 });
