@@ -2,19 +2,35 @@
 
 Route management, the bacon.js way.
 
-Install
--------
-
-```sh
-bower install --save bacon-routes
-```
-
 Intro
 -----
 
 Bacon.js is a library for functional reactive programming, you can get more information about it on the [github project webpage](https://github.com/baconjs/bacon.js).
 
 The idea here is to handle history states and manage client-side routing using Bacon.js.
+
+Install
+-------
+
+You can install bacon-routes with bower or npm (in order to use it with browserify)
+
+Using bower:
+
+```sh
+bower install --save bacon-routes
+```
+
+Using browserify, you currently have to put `Bacon` in the global scope:
+
+```sh
+npm install --save bacon-routes
+```
+
+```js
+/* In your javascript file */
+var Bacon = window.Bacon = require("baconjs");
+require("bacon-routes");
+```
 
 API
 ---
