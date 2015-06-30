@@ -1,0 +1,8 @@
+{
+  "name": "bacon-routes",
+  "version": "0.1.1",
+  "main": "bacon-routes.js",
+  "dependencies": {
+    "bacon": "~0.7.15"
+  }
+}

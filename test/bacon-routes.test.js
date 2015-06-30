@@ -1,6 +1,3 @@
-var Bacon = window.Bacon = require("baconjs");
-require("../bacon-routes.js");
-
 describe("Bacon.history", function() {
   afterEach(function() {
     Bacon.history.pushState(null, null, window.location.origin);
