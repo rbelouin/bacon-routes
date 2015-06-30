@@ -37,6 +37,12 @@ Bacon.history.onValue(function(history) {
 */
 ```
 
+`Bacon.history` provides a `pushState` method in order to trigger the load of a URL. See the related [MDN article](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history#The_pushState%28%29_method) for further documentation.
+
+```js
+  Bacon.history.pushState(null, null, "/some-path/some-param");
+```
+
 `Bacon.fromRoutes` is a method creating streams for each given route.
 
 Example:
